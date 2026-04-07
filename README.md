@@ -1,14 +1,14 @@
 # Assignment 1: Q-Learning Implementation Report
 
-[cite_start]This report documents the implementation of the Q-Learning algorithm on the `FrozenLake-v1` environment[cite: 1, 4]. [cite_start]The goal was to train an agent to navigate from a start tile to a goal tile while avoiding holes[cite: 5, 6].
+This report documents the implementation of the Q-Learning algorithm on the `FrozenLake-v1` environment[cite: 1, 4]. The goal was to train an agent to navigate from a start tile to a goal tile while avoiding holes[cite: 5, 6].
 
 ---
 
 ## T1. Implementation of Q-Learning
-[cite_start]The implementation was carried out in the `01_LAB_A_Q_Learning.ipynb` notebook[cite: 9]. [cite_start]The process involved defining the state-action space and initializing the knowledge base[cite: 8].
+The implementation was carried out in the `01_LAB_A_Q_Learning.ipynb` notebook[cite: 9]. The process involved defining the state-action space and initializing the knowledge base[cite: 8].
 
 ### Q-Table Shape and Initialization
-* [cite_start]**Identification**: The code uses `env.observation_space.n` and `env.action_space.n` to determine dimensions[cite: 53]. For `FrozenLake-v1`, this results in 16 states and 4 actions.
+* **Identification**: The code uses `env.observation_space.n` and `env.action_space.n` to determine dimensions[cite: 53]. For `FrozenLake-v1`, this results in 16 states and 4 actions.
 * **Implementation**: `Q_table = np.zeros((state_size, action_size))` creates a $16 \times 4$ matrix where every state-action pair is initially valued at zero, representing a lack of prior knowledge.
 
 ---
@@ -21,14 +21,14 @@
     td_target = reward + gamma * np.max(Q_table[new_state, :])
     td_error = td_target - Q_table[state, action]
     ```
-* [cite_start]**Theory**: The **Temporal Difference (TD) Error** measures the discrepancy between the current Q-value estimate and the updated estimate provided by the reward and the discounted value of the next state[cite: 14, 18].
+* **Theory**: The **Temporal Difference (TD) Error** measures the discrepancy between the current Q-value estimate and the updated estimate provided by the reward and the discounted value of the next state[cite: 14, 18].
 
 ### 2. The Q-Table Update Rule
 * **Code Connection**: 
     ```python
     Q_table[state, action] = Q_table[state, action] + alpha * td_error
     ```
-* [cite_start]**Theory**: This follows the Bellman equation to iteratively improve the agent's policy[cite: 13]. [cite_start]By adding a fraction (`alpha`) of the TD error to the current value, the table gradually converges toward the optimal values[cite: 18].
+* **Theory**: This follows the Bellman equation to iteratively improve the agent's policy[cite: 13]. By adding a fraction (`alpha`) of the TD error to the current value, the table gradually converges toward the optimal values[cite: 18].
 
 ### 3. The $\epsilon$-greedy Action Selection
 * **Code Connection**:
@@ -38,21 +38,21 @@
     else:
         action = env.action_space.sample()     # Exploration
     ```
-* [cite_start]**Theory**: This strategy balances **exploration** (trying new actions) and **exploitation** (using known best actions)[cite: 10, 60].
+* **Theory**: This strategy balances **exploration** (trying new actions) and **exploitation** (using known best actions)[cite: 10, 60].
 
 ### 4. The $\epsilon$ Decay Schedule
 * **Code Connection**: 
     ```python
     epsilon = min_epsilon + (max_epsilon - min_epsilon) * np.exp(-decay_rate * episode)
     ```
-* [cite_start]**Theory**: As the agent learns, the need for exploration decreases[cite: 15]. [cite_start]The exponential decay ensures the agent moves from random searching to informed decision-making over time[cite: 72].
+* **Theory**: As the agent learns, the need for exploration decreases[cite: 15]. The exponential decay ensures the agent moves from random searching to informed decision-making over time[cite: 72].
 
 ---
 
 ## Hyperparameters Table
-[cite_start][cite: 19, 20]
+[cite: 19, 20]
 
-| Hyperparameter | Value | [cite_start]Justification [cite: 21] |
+| Hyperparameter | Value | Justification [cite: 21] |
 | :--- | :--- | :--- |
 | $\alpha$ (Learning Rate) | 0.1 | Determines how much new information overrides old information. |
 | $\gamma$ (Discount Factor) | 0.99 | High value to prioritize long-term rewards (reaching the goal). |
@@ -65,14 +65,14 @@
 ---
 
 ## T3. Learning Analysis and Visualization
-[cite_start]The implementation includes a reward tracking system and a video rendering module[cite: 22, 23].
-* [cite_start]**Learning Curve**: Rewards were stored in the `rewards` list and plotted to show how the agent's success rate increases across 1000 episodes[cite: 76].
-* [cite_start]**Maximum Q-Value Heatmap**: By calculating `np.max(Q_table, axis=1)`, we visualize the "safest" paths toward the goal[cite: 24].
+The implementation includes a reward tracking system and a video rendering module[cite: 22, 23].
+* **Learning Curve**: Rewards were stored in the `rewards` list and plotted to show how the agent's success rate increases across 1000 episodes[cite: 76].
+* **Maximum Q-Value Heatmap**: By calculating `np.max(Q_table, axis=1)`, we visualize the "safest" paths toward the goal[cite: 24].
 * **Video Output**: Using `RecordVideo` and `show_video`, the final trained policy is visualized to demonstrate the agent navigating the ice successfully.
 
 ---
 
 ## T4. Environment Variation
-[cite_start]The code was tested with `is_slippery=False`[cite: 26]. 
-* [cite_start]**Deterministic (`is_slippery=False`)**: The agent learns a direct path since actions result in the intended state transition[cite: 27].
-* [cite_start]**Stochastic (`is_slippery=True`)**: If enabled, the agent would require more episodes and a more conservative policy because actions have only a probability of moving the agent in the desired direction[cite: 27, 28].
+The code was tested with `is_slippery=False`[cite: 26]. 
+* **Deterministic (`is_slippery=False`)**: The agent learns a direct path since actions result in the intended state transition[cite: 27].
+* **Stochastic (`is_slippery=True`)**: If enabled, the agent would require more episodes and a more conservative policy because actions have only a probability of moving the agent in the desired direction[cite: 27, 28].
